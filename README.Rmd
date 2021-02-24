@@ -1,0 +1,51 @@
+---
+title: "Homework3"
+author: "Makayla Hayes"
+date: "2/23/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(nycflights13)
+library(lubridate)
+library(tidyr)
+
+```
+
+Problem 1
+```{r}
+temp<-flights%>%
+  group_by(tailnum)%>%
+  mutate(avg_arr_delay=mean(arr_delay,na.rm = TRUE))%>%
+  select(tailnum,avg_arr_delay)
+planestemp<-planes%>%
+  select(tailnum,year)
+final<-temp%>%
+  left_join(planestemp, by = "tailnum")
+head(final)
+
+```
+
+Problem 2
+```{r}
+pr2<-flights%>%
+  mutate(day_of_year=date(time_hour))%>%
+  group_by(day_of_year,origin)%>%
+    summarise(num_sched=sum(!is.na(sched_dep_time)))%>%
+  pivot_wider(names_from = origin,values_from = num_sched)
+head(pr2)
+```
+Problem 3
+Each NA means there were no flights that day that came into that airport from any of the New York airports
+```{r}
+pr3<-flights%>%
+  mutate(day_of_year=yday(time_hour))%>%
+  group_by(day_of_year,dest)%>%
+    summarise(num_arrive=sum(!is.na(arr_time)))%>%
+  pivot_wider(names_from = dest,values_from = num_arrive)
+head(pr3)
+```
+
