@@ -54,10 +54,11 @@ Problem 3
 Each NA means there were no flights that day that came into that airport from any of the New York airports
 ```{r}
 pr3<-flights%>%
-  mutate(day_of_year=yday(time_hour))%>%
+  mutate(day_of_year=date(time_hour))%>%
   group_by(day_of_year,dest)%>%
     summarise(num_arrive=sum(!is.na(arr_time)))%>%
-  pivot_wider(names_from = dest,values_from = num_arrive)
+  pivot_wider(names_from = dest,values_from = num_arrive, values_fill = list(num_arrive=0))
+
 head(pr3)
 
 

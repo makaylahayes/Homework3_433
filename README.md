@@ -68,23 +68,24 @@ ggplot(pr2,aes(x=yday(day_of_year)))+
 
 ``` r
 pr3<-flights%>%
-  mutate(day_of_year=yday(time_hour))%>%
+  mutate(day_of_year=date(time_hour))%>%
   group_by(day_of_year,dest)%>%
     summarise(num_arrive=sum(!is.na(arr_time)))%>%
-  pivot_wider(names_from = dest,values_from = num_arrive)
+  pivot_wider(names_from = dest,values_from = num_arrive, values_fill = list(num_arrive=0))
+
 head(pr3)
 ```
 
     ## # A tibble: 6 x 106
     ## # Groups:   day_of_year [6]
     ##   day_of_year   ALB   ATL   AUS   AVL   BDL   BNA   BOS   BQN   BTV   BUF   BUR
-    ##         <dbl> <int> <int> <int> <int> <int> <int> <int> <int> <int> <int> <int>
-    ## 1           1     3    40     6     1     2    10    25     3     7    16     2
-    ## 2           2     3    50     7     1     2    11    26     3     9    16     2
-    ## 3           3     2    49     6    NA     1    11    30     3     6    13     2
-    ## 4           4     2    48     6    NA     1    11    30     3     7    13     2
-    ## 5           5     2    35     4    NA     2     8    20     3     8    15     2
-    ## 6           6     2    41     5    NA     1    13    29     3     7    12     2
+    ##   <date>      <int> <int> <int> <int> <int> <int> <int> <int> <int> <int> <int>
+    ## 1 2013-01-01      3    40     6     1     2    10    25     3     7    16     2
+    ## 2 2013-01-02      3    50     7     1     2    11    26     3     9    16     2
+    ## 3 2013-01-03      2    49     6     0     1    11    30     3     6    13     2
+    ## 4 2013-01-04      2    48     6     0     1    11    30     3     7    13     2
+    ## 5 2013-01-05      2    35     4     0     2     8    20     3     8    15     2
+    ## 6 2013-01-06      2    41     5     0     1    13    29     3     7    12     2
     ## # … with 94 more variables: BWI <int>, CAK <int>, CHS <int>, CLE <int>,
     ## #   CLT <int>, CMH <int>, CRW <int>, CVG <int>, DAY <int>, DCA <int>,
     ## #   DEN <int>, DFW <int>, DSM <int>, DTW <int>, EGE <int>, FLL <int>,
