@@ -33,10 +33,12 @@ Problem 2
 ``` r
 pr2<-flights%>%
   mutate(day_of_year=date(time_hour))%>%
+  mutate(day_num=yday(time_hour))%>%
   group_by(day_of_year,origin)%>%
     summarise(num_sched=sum(!is.na(sched_dep_time)))%>%
   pivot_wider(names_from = origin,values_from = num_sched)
-head(pr2)
+
+  head(pr2) 
 ```
 
     ## # A tibble: 6 x 4
@@ -50,7 +52,19 @@ head(pr2)
     ## 5 2013-01-05    238   302   180
     ## 6 2013-01-06    301   307   224
 
-Problem 3 Each NA means there were no flights that day that came into that airport from any of the New York airports
+``` r
+ggplot(pr2,aes(x=yday(day_of_year)))+
+  geom_point(aes(y=EWR,colour="EWR"))+ 
+  geom_point(aes(y=JFK,colour="JFK"))+
+  geom_point(aes(y=LGA,colour="LGA"))+ 
+  scale_colour_manual("", 
+                      breaks = c("EWR", "JFK", "LGA"),
+                      values = c("orchid4", "seagreen4", "steelblue3")) +
+  
+  ggtitle("Flights per Day")+ylab("Number of Flights")+xlab("Day of the Year")
+```
+
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png) Problem 3 Each NA means there were no flights that day that came into that airport from any of the New York airports
 
 ``` r
 pr3<-flights%>%
@@ -87,3 +101,5 @@ head(pr3)
     ## #   BHM <int>, CAE <int>, BZN <int>, EYW <int>, HDN <int>, MTJ <int>,
     ## #   PSP <int>, CHO <int>, BGR <int>, ABQ <int>, ACK <int>, MVY <int>,
     ## #   TVC <int>, ANC <int>, LGA <int>, SBN <int>, ILM <int>, LEX <int>
+
+<https://github.com/makaylahayes/Homework3_433>

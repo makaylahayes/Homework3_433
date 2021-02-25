@@ -33,10 +33,22 @@ Problem 2
 ```{r}
 pr2<-flights%>%
   mutate(day_of_year=date(time_hour))%>%
+  mutate(day_num=yday(time_hour))%>%
   group_by(day_of_year,origin)%>%
     summarise(num_sched=sum(!is.na(sched_dep_time)))%>%
   pivot_wider(names_from = origin,values_from = num_sched)
-head(pr2)
+
+  head(pr2) 
+
+ggplot(pr2,aes(x=yday(day_of_year)))+
+  geom_point(aes(y=EWR,colour="EWR"))+ 
+  geom_point(aes(y=JFK,colour="JFK"))+
+  geom_point(aes(y=LGA,colour="LGA"))+ 
+  scale_colour_manual("", 
+                      breaks = c("EWR", "JFK", "LGA"),
+                      values = c("orchid4", "seagreen4", "steelblue3")) +
+  
+  ggtitle("Flights per Day")+ylab("Number of Flights")+xlab("Day of the Year")
 ```
 Problem 3
 Each NA means there were no flights that day that came into that airport from any of the New York airports
@@ -47,5 +59,8 @@ pr3<-flights%>%
     summarise(num_arrive=sum(!is.na(arr_time)))%>%
   pivot_wider(names_from = dest,values_from = num_arrive)
 head(pr3)
+
+
 ```
 
+https://github.com/makaylahayes/Homework3_433
